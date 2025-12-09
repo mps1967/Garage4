@@ -26,6 +26,15 @@ namespace Lib
             Depth: 0,
             Extra: ""
         );
+        static private VehicleRecord Force(VehicleRecord r)
+        {
+            r.OurId = 0;
+            r.OfficialId = "";
+            r.VehicleType = DefaultRecord.VehicleType;
+            return r;
+        }
         public Bike(IGlobals globals) : base(globals, DefaultRecord) { }
+        public Bike(IGlobals globals, VehicleRecord record) 
+            : base(globals, Force(record)) { }
     }
 }

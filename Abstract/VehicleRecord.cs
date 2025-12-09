@@ -8,19 +8,19 @@ namespace Abstract
 {
     public record struct VehicleRecord
     (
-        int OurId,
-        string OfficialId,
-        string VehicleType,
-        string BrandModel,
-        string Color,
-        int RequiredSpaces,
-        bool IsSmall,
-        int WheelCount,
-        int Persons,
-        float Height,
-        float Width,
-        float Length,
-        float Depth,
-        string Extra  // extra properties not explicitly listed.
+        int OurId = 0,
+        string OfficialId = "",
+        string VehicleType = "",
+        string BrandModel = "",
+        string Color = "Grey",
+        int RequiredSpaces = 1,
+        bool IsSmall = false,
+        int WheelCount = 0,
+        int Persons = 1,
+        float Height = 0,
+        float Width = 0,
+        float Length = 0,
+        float Depth = 0,
+        string Extra = ""  // extra properties not explicitly listed.
     );
 }

@@ -27,5 +27,13 @@ namespace Lib
             Extra: ""
         );
         public Moto(IGlobals globals) : base(globals, DefaultRecord) { }
+        static private VehicleRecord Force(VehicleRecord r)
+        {
+            r.OurId = 0;
+            r.OfficialId = "";
+            r.VehicleType = DefaultRecord.VehicleType;
+            return r;
+        }
+        public Moto(IGlobals globals, VehicleRecord r) : base(globals, Force(r)) { }
     }
 }

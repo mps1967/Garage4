@@ -11,7 +11,9 @@ namespace Abstract
         void AddVehicle(IVehicle vehicle);
 
         // Floats are multiplied by 10 and inserted into an int index.
-        SortedList<int, List<int>> GetIntIndex(string field);
-        SortedList<string, List<int>> GetStringIndex(string field);
+        SortedList<int, SortedSet<int>> GetIndex(string field, int blahblah);
+        SortedList<string, SortedSet<int>> GetIndex(string field, string blablah);
+        IEnumerable<string> GetFields(string blahblah);
+        IEnumerable<string> GetFields(int blahblah);
     }
 }

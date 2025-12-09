@@ -2,9 +2,10 @@
 {
     public interface IVehicle
     {
-        int OurId();
+        public int OurId();
         VehicleRecord Record();
-        bool Load(string? filename=null);  // filename=null for the standard location.
-        bool Save(string? filename=null);  // filename=null for the standard location.
+        public bool Load(string? filename=null);  // filename=null for the standard location.
+        public bool Save(string? filename=null);  // filename=null for the standard location.
+        public string Line();
     }
 }

@@ -7,12 +7,14 @@ using System.Threading.Tasks.Dataflow;
 
 namespace Abstract
 {
-    internal interface IRegistry
+    public interface IRegistry
     {
         IVehicle? Get(int ourid);
         bool Save(int ourid, IVehicle vehicle);
         bool SaveAsTemplate(string filename, IVehicle vehicle);
 
-        IDB AsDatabase();
+        IDB Database {  get; }
+
+        string Line(int ourid);
     }
 }

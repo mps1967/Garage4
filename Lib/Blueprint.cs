@@ -4,6 +4,10 @@ namespace Lib
 {
     public class Blueprint (IGlobals globals, string name) : IBlueprint
     {
+        // The 3 available blueprints.
+        public static readonly string VEHTYPES = "VehicleTypes";
+        public static readonly string BRANDMODEL = "BrandModel";
+        public static readonly string COLOR = "Color";
         public string Name { get; } = name;
         public BPSet Set { get; private set; } = new();
 

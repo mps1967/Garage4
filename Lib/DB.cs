@@ -9,7 +9,6 @@ namespace Lib
 {
     public class DB : IDB
     {
-
         private SortedDictionary<
             string,  // string field name
             SortedList<
@@ -41,6 +40,42 @@ namespace Lib
             // TODO: look into Extra.
         }
 
+        public DB(DB parent, SortedSet<int> filter)
+        {
+            foreach (var kv in parent.string_indexes_) InitStringIndex(kv.Key, kv.Value, filter);
+            foreach (var kv in parent.int_indexes_) InitIntIndex(kv.Key, kv.Value, filter);
+        }
+
+        void InitStringIndex(
+            string field_name,
+            SortedList<string, SortedSet<int>> parent_sl,
+            SortedSet<int> filter)
+        {
+            string_indexes_[field_name] = new();
+            foreach (var kv in parent_sl) InitStringSortedList(field_name, kv.Key, kv.Value, filter);
+        }
+        void InitIntIndex(
+            string field_name,
+            SortedList<int, SortedSet<int>> parent_sl,
+            SortedSet<int> filter)
+        {
+            int_indexes_[field_name] = new();
+            foreach (var kv in parent_sl) InitIntSortedList(field_name, kv.Key, kv.Value, filter);
+        }
+
+        void InitStringSortedList(string field_name, string value, SortedSet<int> parent_idset, SortedSet<int> filter)
+        {
+            string_indexes_[field_name][value] = new();
+            string_indexes_[field_name][value].UnionWith(parent_idset);
+            string_indexes_[field_name][value].IntersectWith(filter);
+        }
+        void InitIntSortedList(string field_name, int value, SortedSet<int> parent_idset, SortedSet<int> filter)
+        {
+            int_indexes_[field_name][value] = new();
+            int_indexes_[field_name][value].UnionWith(parent_idset);
+            int_indexes_[field_name][value].IntersectWith(filter);
+        }
+
         void AddL2(SortedList<string, SortedSet<int>> sl2, string field_value, int ourid)
         {
             if (!sl2.ContainsKey(field_value)) sl2[field_value] = new();
@@ -60,7 +95,7 @@ namespace Lib
             AddL2(int_indexes_[field_name], field_value, ourid);
         }
         private static int to_int(bool b) { return b ? 1 : 0; }
-        private static int to_int(float f) => (int)(f * 10);
+        private static int to_int(float f) => Math.Abs((int)(f * 10));
         public void AddVehicle(IVehicle vehicle)
         {
             int ourid = vehicle.OurId();
@@ -76,26 +111,39 @@ namespace Lib
             Add("Length", to_int(vehicle.Record().Length), ourid);
             Add("Depth", to_int(vehicle.Record().Depth), ourid);
 
-            string[] parts = vehicle.Record().Extra.Split(Menu.WHITESPACE, Menu.SPLITOPT);
+            string[] parts = vehicle.Line().Split(Menu.WHITESPACE, Menu.SPLITOPT);
             foreach (var p in parts)
             {
-                Add("Extra", p, ourid);
+                Add("Line", p, ourid);  // includes extra.
             }
         }
 
-        public SortedList<float, List<int>> GetFloatIndex(string field)
+        public IEnumerable<string> GetFields(string unused) { return string_indexes_.Keys;  }
+        public IEnumerable<string> GetFields(int unused) { return int_indexes_.Keys; }
+
+        public SortedList<int, SortedSet<int>> GetIndex(string field, int unused)
         {
-            throw new NotImplementedException();
+            return int_indexes_[field];
+        }
+        public SortedList<string, SortedSet<int>> GetIndex(string field, string unused)
+        {
+            return string_indexes_[field];
         }
 
-        public SortedList<int, List<int>> GetIntIndex(string field)
+        public void Load(IGlobals ig)
         {
-            throw new NotImplementedException();
-        }
-
-        public SortedList<string, List<int>> GetStringIndex(string field)
-        {
-            throw new NotImplementedException();
+            string vdir = Path.Join(ig.DataRoot, "Vehicles");
+            foreach (var f in Directory.EnumerateFiles(vdir))
+            {
+                if (!f.EndsWith(".json")) continue;
+                string numf = f.Substring(0, f.Length - 4);
+                if (!int.TryParse(numf, out int ourid)) continue;
+                VehicleRecord r = new();
+                r.OurId = ourid;
+                Vehicle v = new(ig, r);
+                if (!v.Load()) continue;
+                AddVehicle(v);
+            }
         }
     }
 }
