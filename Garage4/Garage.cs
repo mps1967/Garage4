@@ -51,9 +51,14 @@ namespace Garage4
         static IEnumerable<Space> Children(string name)
             // Creates the children spaces and all spaces starting from the children of the root.
         {
-            foreach (string c in GarageDef.Tree[name])
+            if (GarageDef.Tree.ContainsKey(name))
             {
-                yield return new Space(GarageDef.Records[c], Children(c));
+                foreach (string c in GarageDef.Tree[name])
+                {
+                    SpaceRecord r = GarageDef.Records[c];
+                    IEnumerable<Space> spaces = Children(c);
+                    yield return new Space(r, spaces);
+                }
             }
         }
         static IEnumerable<KeyValuePair<string, ISpace>> SpaceList(ISpace sp)
@@ -61,7 +66,7 @@ namespace Garage4
             yield return new(sp.Name, sp);
             foreach (var s in sp.Spaces())
             {
-                foreach (var kv in SpaceList(sp))
+                foreach (var kv in SpaceList(s))
                 {
                     yield return kv;
                 }
@@ -102,5 +107,6 @@ namespace Garage4
         {
             try { MustLoad(); return true; }
             catch { return false; }
+        }
     }
 }

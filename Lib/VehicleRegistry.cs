@@ -17,7 +17,8 @@ namespace Lib
         }
 
         private IGlobals ig_;
-        public IDB Database { get; } = new DB();
+        private DB db_ = new();
+        public IDB Database { get { return db_; }}
         private IBlueprint vehtypes_;
         private IBlueprint brandmodel_;
         private IBlueprint color_;
@@ -119,6 +120,7 @@ namespace Lib
             classes_["Car"] = new Car(ig_);
             classes_["Moto"] = new Moto(ig_);
             classes_["Plane"] = new Plane(ig_);
+            db_.Load(ig_);
         }
 
         
@@ -204,8 +206,8 @@ namespace Lib
                 if (sb.Length < maxlen) sb.Append(c);
             }
             string ss = sb.ToString().Trim();
-            if (s.Length < minlen) return false;
-            if (s.Length > maxlen) return false;
+            if (ss.Length < minlen) return false;
+            if (ss.Length > maxlen) return false;
             s = ss;
             return true;
         }
@@ -432,7 +434,7 @@ namespace Lib
             {
                 MakeFirstMenu();
                 int sel = Menu.Run(first_menu_, 
-                    "Select starting point or write new vehicle type.", 
+                    "Select starting point or write new vehicle type :", 
                     out string vt);
                 if (sel < 0) continue;
                 if (sel == first_menu_.Count)
@@ -447,6 +449,7 @@ namespace Lib
                     record_ = vehicle_menu_[sel].Record();
                     EnforceUniqueOfficialId(record_.OfficialId);
                 }
+                second_menu_ = new();
                 MakeSecondMenu();
                 int sel2 = Menu.Run(second_menu_, "Select field to edit or save :", out string text);
                 if (sel2 < 0) continue;
@@ -466,7 +469,10 @@ namespace Lib
                 case "/": SaveAsVehicleType(); return false;
                 case "+": SaveAsBrandModel(); return false;
                 case "*": Save(); return true;
-                default: EditField(field); return false;
+                default: 
+                    EditField(field);
+                    CreateTarget();
+                    return false;
             }
         }
 
@@ -522,7 +528,7 @@ namespace Lib
         {
             List<string> colors = color_.Set.ToList();
             string value = RecordField("Color");
-            int sel = Menu.Run(colors, " Color [{value}] :", out string c);
+            int sel = Menu.Run(colors, $" Color [{value}] :", out string c);
             if (sel < 0) return value;
             if (sel >= colors.Count) return c;
             return colors[sel];
@@ -544,7 +550,7 @@ namespace Lib
                     value = EditColor();
                     break;
                 default:
-                    string prompt = "Value for {field} [{value}] :";
+                    string prompt = $"Value for {field} [{value}] :";
                     int sel = Menu.Run(new(), prompt, out string v);
                     if (sel == 0) value = v;
                     break;

@@ -9,6 +9,7 @@ namespace Lib
 {
     public class DB : IDB
     {
+        public int Count { get; set; } = 0;
         private SortedDictionary<
             string,  // string field name
             SortedList<
@@ -30,8 +31,10 @@ namespace Lib
             string_indexes_["VehicleType"] = new();
             string_indexes_["BrandModel"] = new();
             string_indexes_["Color"] = new();
+            string_indexes_["Line"] = new();
             int_indexes_["IsSmall"] = new();
             int_indexes_["WheelCount"] = new();
+            int_indexes_["RequiredSpaces"] = new();
             int_indexes_["Persons"] = new();
             int_indexes_["Height"] = new();
             int_indexes_["Width"] = new();
@@ -98,6 +101,7 @@ namespace Lib
         private static int to_int(float f) => Math.Abs((int)(f * 10));
         public void AddVehicle(IVehicle vehicle)
         {
+            Count += 1;
             int ourid = vehicle.OurId();
             Add("OfficialId", vehicle.Record().OfficialId, ourid);
             Add("VehicleType", vehicle.Record().VehicleType, ourid);
@@ -136,7 +140,8 @@ namespace Lib
             foreach (var f in Directory.EnumerateFiles(vdir))
             {
                 if (!f.EndsWith(".json")) continue;
-                string numf = f.Substring(0, f.Length - 4);
+                string fn = Path.GetFileName(f);
+                string numf = fn.Substring(0, fn.Length - 5);
                 if (!int.TryParse(numf, out int ourid)) continue;
                 VehicleRecord r = new();
                 r.OurId = ourid;

@@ -28,8 +28,6 @@ namespace Lib
         );
         static private VehicleRecord Force(VehicleRecord r)
         {
-            r.OurId = 0;
-            r.OfficialId = "";
             r.Depth = -(float)(Math.Abs(r.Depth));
             if (r.Depth > -1f) r.Depth = -1f;
             r.VehicleType = DefaultRecord.VehicleType;

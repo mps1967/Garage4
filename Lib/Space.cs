@@ -65,7 +65,7 @@ namespace Lib
             {
                 case 'P': plane = true; return;
                 case 'B': bus = true; return;
-                default: Debug.Assert(false); return; ;
+                default: return; ;
             }
         }
 

@@ -270,7 +270,7 @@ namespace Lib
         {
             while (true)
             {
-                int sel = Menu.Run(props_menu_, "prop to query :", out string prop);
+                int sel = Menu.Run(props_menu_, $"prop to query [{Prop}] :", out string prop);
                 if (sel < 0) return false;
                 if (sel < props_menu_.Count) prop = props_menu_[sel];
                 if (!all_props_.Contains(prop)) return false;
@@ -281,19 +281,11 @@ namespace Lib
                 Console.WriteLine("_ (underscore) for no upper or lower limit in range.");
                 Console.WriteLine("All numbers are positive.");
                 List<string> menu = new();
-                if (description_.Length > 0)
-                {
-                    Console.WriteLine(description_);
-                    menu.Add("ExecuteQuery");
-                }
                 string prompt = "Enter value or range or pattern :";
                 int sel2 = Menu.Run(menu, prompt, out string str);
                 if (sel2 < 0) continue;
-                if (sel2 == 1)
-                {
-                    ParseInput(str);
-                    continue;
-                }
+                ParseInput(str);
+                if (description_.Length > 0) Console.WriteLine(description_);
                 Query();
                 return true;
             }

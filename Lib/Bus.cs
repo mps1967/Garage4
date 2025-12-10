@@ -28,8 +28,6 @@ namespace Lib
         );
         static private VehicleRecord Force(VehicleRecord r)
         {
-            r.OurId = 0;
-            r.OfficialId = "";
             r.VehicleType = DefaultRecord.VehicleType;
             return r;
         }

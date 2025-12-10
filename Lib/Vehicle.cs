@@ -69,16 +69,18 @@ namespace Lib
         }
         public string Line()
         {
+            string ourid = "New";
+            if (record_.OurId != 0) ourid = $"{record_.OurId}";
             string oi = $"[{record_.OfficialId}]";
             if (string.IsNullOrEmpty(record_.OfficialId)) oi = "";
             string small = record_.IsSmall ? "I" : "W";
             float depth = (float)(Math.Abs(record_.Depth));
             string dim = ""
-                + $"H{record_.Height:F1}W{record_.Width:F1}"
-                + $"L{record_.Length:F1}D{depth:F1} "
+                + $"H{record_.Height:F1} W{record_.Width:F1} "
+                + $"L{record_.Length:F1} D{depth:F1} "
                 + $"{record_.WheelCount}W {record_.Persons}P"
                 + $"{record_.RequiredSpaces}S{small}";
-            return $"{OurId}: {record_.VehicleType} {oi} "
+            return $"{ourid}: {record_.VehicleType} {oi} "
                 + $"{record_.Color} {record_.BrandModel} {dim} {record_.Extra}";
         }
     }

@@ -29,14 +29,18 @@ namespace Garage4
                 bpColor.Set.Add(c);
             }
             bpColor.Save();
-            g.Load();
             VehicleRegistry vr = new(globals);
             Garage g = new(globals, vr);
+            g.Load();
             IDB db = vr.Database;
+            DB? _db = db as DB;
+            int count = _db == null ? 0 : _db.Count;
+            Console.WriteLine($"Indexed {count} vehicles.");
             Selector sel = new(globals, db);
-            sel.Run();
+            while (!sel.Run());  // yes, till a query is run!
             List<string> menu = new();
             List<int> ourids = new();
+            Console.WriteLine($"{sel.OurIdSet.Count} vehicles.");
             foreach (int o in sel.OurIdSet)
             {
                 var l = vr.Line(o);
@@ -45,8 +49,11 @@ namespace Garage4
                 ourids.Add(o);
             }
             int ourid = 0;
-            int sel2 = Menu.Run(menu, ":", out string text);
-            if (sel2 > 0 && sel2 < menu.Count) ourid = ourids[sel2];
+            if (menu.Count > 0)
+            {
+                int sel2 = Menu.Run(menu, ":", out string text);
+                if (sel2 > 0 && sel2 < menu.Count) ourid = ourids[sel2];
+            }
             ourid = vr.Run(ourid);
             IVehicle? v = vr.Get(ourid);
             Debug.Assert(v != null);

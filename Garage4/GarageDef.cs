@@ -12,7 +12,7 @@ namespace Garage4
         // This will evventually be loaded from a config file.
         // This class defines the Garage from a collection os Spacerecords.
     {
-       public static readonly Dictionary<string, SpaceRecord> Records;
+       public static readonly SortedDictionary<string, SpaceRecord> Records;
        public static readonly SortedDictionary<string, List<string>> Tree;
 
         private static SpaceRecord BoatSpace(string name)
@@ -26,6 +26,7 @@ namespace Garage4
 
         private static void AddCarSpaces(string name, int num)
         {
+            if (!Tree.ContainsKey(name)) Tree.Add(name, new());
             for (int i = 0; i < num; ++i)
             {
                 string cn = $"{name}.{i}";
@@ -35,6 +36,7 @@ namespace Garage4
         }
         private static void AddBusSpaces(string name, int num)
         {
+            if (!Tree.ContainsKey(name)) Tree.Add(name, new());
             for (int i = 0; i < num; ++i)
             {
                 string bn = $"{name}.B{i}";
@@ -45,6 +47,7 @@ namespace Garage4
         }
         private static void AddPlaneSpaces(string name, int num)
         {
+            if (!Tree.ContainsKey(name)) Tree.Add(name, new());
             for (int i = 0; i < num; ++i)
             {
                 string pn = $"{name}.P{i}";
@@ -56,7 +59,7 @@ namespace Garage4
 
         private static void AddGarage(string name)
         {
-            Tree[name] = new();
+            if (!Tree.ContainsKey(name)) Tree.Add(name, new());
             Records[name] =new SpaceRecord(name);
             AddPlaneSpaces(name, 2); // 2* 18 = 36
             AddBusSpaces(name, 2);  // 2*6 = 12
