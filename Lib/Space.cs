@@ -31,6 +31,7 @@ namespace Lib
 
         public int Score()
             {
+                if (ParkingSpace == null) return 0;
                 return Planes * Plane.DefaultRecord.RequiredSpaces
                     + Busses * Bus.DefaultRecord.RequiredSpaces
                     + Cars + Boats + (1 + Small) / 2;
@@ -42,7 +43,10 @@ namespace Lib
                 Cars += ps.Cars;
                 Boats += ps.Boats;
                 Small += ps.Small;
-                if (ps.ParkingSpace != null) ParkingSpace = ps.ParkingSpace;
+                if (ps.ParkingSpace != null) 
+                {
+                    ParkingSpace = ps.ParkingSpace; 
+                }
             }
         }
         private SortedDictionary<int, IVehicle> parked_ = new();

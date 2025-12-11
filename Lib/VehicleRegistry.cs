@@ -410,7 +410,7 @@ namespace Lib
             // save options below.
             MaybeAddSaveAsVehicleType();
             MaybeAddSaveAsBrandModel();
-            second_menu_.Add("Register/Save");
+            second_menu_.Add("Register/Save/Select");
             second_menu_args_.Add("*");
         }
 

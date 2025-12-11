@@ -32,6 +32,7 @@ namespace Garage4
             VehicleRegistry vr = new(globals);
             Garage g = new(globals, vr);
             g.Load();
+            Console.WriteLine($"{g.ParkedDict.Count} vehicles in the garage.");
             IDB db = vr.Database;
             DB? _db = db as DB;
             int count = _db == null ? 0 : _db.Count;
@@ -61,6 +62,7 @@ namespace Garage4
             Console.WriteLine($"{v!.Line()} parked at {space}");
             g.Save();
             g.Load();
+            Console.WriteLine($"{g.ParkedDict.Count} vehicles in the garage.");
 
 
         }

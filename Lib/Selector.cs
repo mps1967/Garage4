@@ -82,7 +82,7 @@ namespace Lib
                     StringBuilder sb = new();
                     sb.Append(LowStr.Substring(0, LowStr.Length - 1));
                     var last = LowStr[LowStr.Length - 1];
-                    sb.Append(1 + last);
+                    sb.Append((char)(1 + last));
                     HighStr = sb.ToString();
                     description_ = $"{LowStr} <= {Prop} < {HighStr}";
                     return true;
@@ -263,6 +263,10 @@ namespace Lib
                 BetweenStr(ix);
                 return;
             }
+            else
+            {
+                PatternMatching(ix);
+            }
 
         }
 
@@ -306,7 +310,8 @@ namespace Lib
                 T midK = ix.GetKeyAtIndex(mid);
                 int ord = v.CompareTo(midK);
                 if (ord < 0) high = mid;
-                else low = mid;
+                else if (ord == 0) return mid;
+                else low = mid + 1;
             }
             return low;
         }
